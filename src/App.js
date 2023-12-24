@@ -1,9 +1,12 @@
+import Login from "./components/Login";
 import "./App.css";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <div className="App">
-      <h1>Welcome to Hell</h1>
+      <Navbar />
+      <Login />
     </div>
   );
 }
