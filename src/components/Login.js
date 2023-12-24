@@ -4,7 +4,7 @@ import qs from "qs";
 
 let client_id = "64b2891d55f24004aaf09173a7816598";
 let client_secret = "052814d35e3b4e8c87c579ff6b706e8a";
-let redirect_uri = "http://localhost:3000";
+let redirect_uri = "https://spotify-app-livid.vercel.app/";
 let state = "asdfghjklpoiuytrewq";
 let scope = "user-read-private%20user-read-email%20user-top-read";
 let accessToken = "";
