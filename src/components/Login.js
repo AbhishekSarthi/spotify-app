@@ -4,7 +4,6 @@ import qs from "qs";
 
 let client_id = "64b2891d55f24004aaf09173a7816598";
 let client_secret = "052814d35e3b4e8c87c579ff6b706e8a";
-// let redirect_uri = "http://localhost:3000";
 let redirect_uri = "https://spotify-app-livid.vercel.app/";
 let state = "asdfghjklpoiuytrewq";
 let scope = "user-read-private%20user-read-email%20user-top-read";
@@ -38,11 +37,15 @@ function Login() {
         let response = await axios.request(config);
         console.log(response.data);
         setProfileData(response.data);
-        console.log(profileData);
-        setProfilePicture(response.data.images[1].url);
+        // console.log(profileData);
+        console.log("logger", response.data.images);
+        if (response.data.images.length > 0) {
+          console.log("Hello img");
+          setProfilePicture(response.data.images[1].url);
+        }
         setDisplayName(response.data.display_name);
       } catch (e) {
-        console.log(e.message, " , ", e.response.data.error.message);
+        console.log("Error body", e);
         // window.localStorage.removeItem("access_token");
         // window.localStorage.removeItem("refresh_token");
       }
@@ -129,7 +132,11 @@ function Login() {
       {accessToken.length !== 0 ? (
         <>
           <h4>Yo! {displayName} How is it going?🔥🔥</h4>
-          <img src={profilePicture} width="300px" alt="Profile" />
+          {profilePicture.length > 0 ? (
+            <img src={profilePicture} width="300px" alt="Profile" />
+          ) : (
+            <>{/* <img src="" /> */}</>
+          )}
         </>
       ) : (
         <a
