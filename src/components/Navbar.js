@@ -23,6 +23,20 @@ function Navbar() {
             <h3>Top Songs</h3>
           </Link>
         </li>
+
+        <li>
+          <Link to="/">
+            <h3
+              onClick={() => {
+                window.localStorage.removeItem("access_token");
+                window.localStorage.removeItem("refresh_token");
+                window.location.reload();
+              }}
+            >
+              Logout
+            </h3>
+          </Link>
+        </li>
       </ul>
     </div>
   );

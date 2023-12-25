@@ -42,11 +42,7 @@ function Songs() {
             return (
               <div className="container" key={data.id}>
                 <div className="artist-image">
-                  <img
-                    src={data.album.images[0].url}
-                    width="300px"
-                    alt="Artist Photo"
-                  />
+                  <img src={data.album.images[0].url} width="100%" alt="Song" />
                 </div>
                 <div className="artist-data">
                   <h4>Id : {data.id}</h4>
