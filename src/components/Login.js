@@ -4,27 +4,24 @@ import qs from "qs";
 
 let client_id = "64b2891d55f24004aaf09173a7816598";
 let client_secret = "052814d35e3b4e8c87c579ff6b706e8a";
+// let redirect_uri = "http://localhost:3000";
 let redirect_uri = "https://spotify-app-livid.vercel.app/";
 let state = "asdfghjklpoiuytrewq";
 let scope = "user-read-private%20user-read-email%20user-top-read";
 let accessToken = "";
 let refreshToken = "";
-const url = window.location.href;
-const urlParams = new URLSearchParams(url.substring(url.indexOf("?") + 1));
-const authCode = urlParams.get("code");
 
 function Login() {
   const [code, setCode] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
-  // const [accessToken, setAccessToken] = useState("");
-  // const [refreshToken, setRefreshToken] = useState("");
-  useEffect(() => {
-    // const SubmitBtn = async () => {
-    //   console.log(window.location);
-    //   await getAccessToken();
-    //   await getUserData();
-    // };
+  const [profileData, setProfileData] = useState([]);
+  const [topArtist, setTopArtist] = useState([]);
 
+  useEffect(() => {
+    const url = window.location.href;
+    const urlParams = new URLSearchParams(url.substring(url.indexOf("?") + 1));
+    const authCode = urlParams.get("code");
     const getUserData = async () => {
       let authorization_token = "Bearer " + accessToken;
       console.log(authorization_token);
@@ -40,9 +37,11 @@ function Login() {
       try {
         let response = await axios.request(config);
         console.log(response.data);
+        setProfileData(response.data);
+        console.log(profileData);
         setProfilePicture(response.data.images[1].url);
+        setDisplayName(response.data.display_name);
       } catch (e) {
-        // console.log(e);
         console.log(e.message, " , ", e.response.data.error.message);
       }
     };
@@ -78,11 +77,14 @@ function Login() {
           accessToken = response.data.access_token;
           refreshToken = response.data.refresh_token;
 
-          // window.localStorage.setItem("access_token", response.data.access_token);
-          // window.localStorage.setItem(
-          //   "refresh_token",
-          //   response.data.refresh_token
-          // );
+          window.localStorage.setItem(
+            "access_token",
+            response.data.access_token
+          );
+          window.localStorage.setItem(
+            "refresh_token",
+            response.data.refresh_token
+          );
           console.log(accessToken, " - ", refreshToken);
         } catch (e) {
           console.log(e.message, ",", e.response.data.error_description);
@@ -94,33 +96,39 @@ function Login() {
       console.log(window.location);
       await getAccessToken();
       await getUserData();
+      // await getUserTopArtist();
     };
+    const callChain2 = async () => {
+      await getUserData();
+      // await getUserTopArtist();
+    };
+    if (window.localStorage.getItem("access_token")) {
+      accessToken = window.localStorage.getItem("access_token");
+    }
 
-    // const callChain = async () => {
-    //   getAccessToken();
-    //   // getUserData();
-    // };
-    // let localCode = window.localStorage.getItem("code");
-    // let localAccessToken = window.localStorage.getItem("access_token");
-
-    // console.log(localCode);
-    // if (!localCode && window.location.search) {
-    // console.log(authCode);
-    // setCode(authCode);
-    // if (!localAccessToken) {
-    // window.localStorage.setItem("access_token", accessToken);
+    if (window.localStorage.getItem("refresh_token")) {
+      refreshToken = window.localStorage.getItem("refresh_token");
+    }
     setCode(authCode);
-    console.log(code, authCode);
-    if (code) {
+    console.log("code: ", code);
+    console.log("authCode : ", authCode);
+    console.log("Access Token: ", accessToken.length);
+    if (accessToken.length === 0 && code) {
       console.log("inside if condition for code");
       callChain();
+    } else if (accessToken.length !== 0) {
+      console.log("inside else if condition");
+      callChain2();
     }
   }, [code]);
 
   return (
     <div className="Login">
-      {code ? (
-        <h4>Welcome to hell</h4>
+      {accessToken.length !== 0 ? (
+        <>
+          <h4>Yo! {displayName} How is it going?🔥🔥</h4>
+          <img src={profilePicture} width="300px" alt="Profile" />
+        </>
       ) : (
         <a
           href={`https://accounts.spotify.com/authorize?response_type=code&client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}&state=${state}`}
@@ -128,9 +136,6 @@ function Login() {
           Login to Spotify
         </a>
       )}
-      {/* <p>{code}</p> */}
-      {/* <p>{accessToken}</p> */}
-      <img src={profilePicture} width="300px" alt="Profile" />
     </div>
   );
 }
