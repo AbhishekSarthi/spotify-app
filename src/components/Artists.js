@@ -28,7 +28,7 @@ function Artists() {
         let config2 = {
           method: "post",
           maxBodyLength: Infinity,
-          url: "http://localhost:5000/users/artists",
+          url: "https://spotify-backend-phi.vercel.app/users/artists",
           headers: {
             "Content-Type": "application/json",
           },
