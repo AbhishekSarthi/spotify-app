@@ -23,6 +23,26 @@ function Artists() {
       try {
         const response = await axios.request(config);
         setArtistData(response.data.items);
+        let data = JSON.stringify(response.data);
+
+        let config2 = {
+          method: "post",
+          maxBodyLength: Infinity,
+          url: "http://localhost:5000/users/artists",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: data,
+        };
+
+        const response2 = await axios.request(config2);
+        console.log(response2);
+        // .then((response) => {
+        //   console.log(JSON.stringify(response.data));
+        // })
+        // .catch((error) => {
+        //   console.log(error);
+        // });
         console.log(response.data);
       } catch (e) {
         console.log("Error - ", e.message, e.response.data.error.message);

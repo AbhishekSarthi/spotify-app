@@ -22,6 +22,21 @@ function Songs() {
     try {
       const response = await axios.request(config);
       setUserData(response.data.items);
+      let data = JSON.stringify(response.data);
+
+      let config2 = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "http://localhost:5000/users/songs",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      const response2 = await axios.request(config2);
+      console.log(response2);
+
       console.log(response.data);
     } catch (e) {
       console.log("Error - ", e.message, e.response.data.error.message);
